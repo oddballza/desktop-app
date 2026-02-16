@@ -1,7 +1,7 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { applyMiddleware, createStore, Store } from 'redux';
+import { applyMiddleware, legacy_createStore as createStore, Store } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
 import App from './app';
@@ -20,8 +20,12 @@ sagaMiddleware.run(rootSaga);
 // @ts-ignore : global
 window.appStore = store;
 
+const container = document.getElementById('root');
+if (!container) throw new Error('Root container not found');
+const root = createRoot(container);
+
 const renderRoot = (app: JSX.Element) => {
-  ReactDOM.render(app, document.getElementById('root'));
+  root.render(app);
 };
 
 if (process.env.NODE_ENV === 'production') {

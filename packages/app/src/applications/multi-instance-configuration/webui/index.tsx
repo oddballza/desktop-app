@@ -1,6 +1,6 @@
 import { BrowserXThemeProvider } from '@getstation/theme';
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Subject } from 'rxjs';
 
 // tslint:disable-next-line:no-import-side-effect
@@ -18,7 +18,10 @@ window.bxApi.theme.addThemeColorsChangeListener(
   (_: any, result: any) => themeColorsObservable.next(result)
 );
 
-ReactDOM.render(
+const container = document.getElementById('root');
+if (!container) throw new Error('Root container not found');
+
+createRoot(container).render(
   <BrowserXThemeProvider>
     <WebUIGradientProvider themeColorsObservable={themeColorsObservable}>
       <MultiInstanceConfigurator
@@ -26,6 +29,5 @@ ReactDOM.render(
         manifestURL={manifestURL}
       />
     </WebUIGradientProvider>
-  </BrowserXThemeProvider>,
-  document.getElementById('root')
+  </BrowserXThemeProvider>
 );

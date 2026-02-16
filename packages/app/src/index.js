@@ -3,7 +3,7 @@ import './utils/stat-cache';
 import './dotenv';
 import { webFrame, ipcRenderer } from 'electron';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { ApolloProvider } from 'react-apollo';
 import { ApolloProvider as ApolloHooksProvider } from 'react-apollo-hooks';
@@ -52,7 +52,10 @@ configureStore(actionsEmitter)
 const render = (store) => {
   const App = require('./containers/App').default; // eslint-disable-line global-require
 
-  ReactDOM.render(
+  const container = document.getElementById('root');
+  if (!container) throw new Error('Root container not found');
+
+  createRoot(container).render(
     <Provider store={store}>
       <ActionsBusReactContext.Provider value={{ actionsBus }}>
         <ApolloProvider client={apolloClient}>
@@ -67,8 +70,7 @@ const render = (store) => {
           </ApolloHooksProvider>
         </ApolloProvider>
       </ActionsBusReactContext.Provider>
-    </Provider>,
-    document.getElementById('root')
+    </Provider>
   );
 
   ipcRenderer.send('bx-ready-to-show');
