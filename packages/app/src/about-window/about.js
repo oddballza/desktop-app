@@ -1,7 +1,7 @@
 import { ipcRenderer } from 'electron';
 import * as remote from '@electron/remote';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 
 import '../utils/stat-cache';
@@ -34,7 +34,10 @@ document.addEventListener('keydown', event => {
 
 const render = (store) => {
   const AboutWindowContainer = require('./Container').default; // eslint-disable-line global-require
-  ReactDOM.render(
+  const container = document.getElementById('root');
+  if (!container) throw new Error('Root container not found');
+
+  createRoot(container).render(
     <Provider store={store}>
       <ConsoleErrorBoundary>
         <ReduxBasedGradientProvider>
@@ -42,7 +45,6 @@ const render = (store) => {
         </ReduxBasedGradientProvider>
       </ConsoleErrorBoundary>
     </Provider>
-    , document.getElementById('root')
   );
 
   ipcRenderer.send('bx-ready-to-show');
